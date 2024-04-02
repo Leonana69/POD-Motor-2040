@@ -69,22 +69,6 @@ Button user_sw(motor2040::USER_SW);
 // Create an array of PID pointers
 PID vel_pids[NUM_MOTORS];
 
-
-// Helper functions for driving in common directions
-void drive_forward(float speed) {
-	vel_pids[FL].setpoint = speed;
-	vel_pids[FR].setpoint = speed;
-	vel_pids[RL].setpoint = speed;
-	vel_pids[RR].setpoint = speed;
-}
-
-void stop() {
-	vel_pids[FL].setpoint = 0.0f;
-	vel_pids[FR].setpoint = 0.0f;
-	vel_pids[RL].setpoint = 0.0f;
-	vel_pids[RR].setpoint = 0.0f;
-}
-
 #define UART_ID uart0
 #define UART_IRQ UART0_IRQ
 void uart_init() {
