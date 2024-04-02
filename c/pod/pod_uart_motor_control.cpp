@@ -140,7 +140,6 @@ int main() {
 				vel_pids[i].setpoint = vel->speed[i] / 1000.0f;
 			}
 		}
-		count++;
 
 		// Capture the state of all the encoders
 		for (auto i = 0u; i < NUM_MOTORS; i++) {
