@@ -40,7 +40,7 @@ constexpr float TIME_FOR_EACH_MOVE = 2.0f;
 const uint UPDATES_PER_MOVE = TIME_FOR_EACH_MOVE * UPDATES_RATE;
 
 // How many of the updates should be printed (i.e. 2 would be every other update)
-const uint PRINT_DIVIDER = 100;
+const uint PRINT_DIVIDER = 20;
 
 // The speed to drive the wheels at
 constexpr float DRIVING_SPEED = 0.2f;
@@ -137,9 +137,10 @@ int main() {
 			motor_2040_control_t *vel = (motor_2040_control_t *) packet.data;
 			for (auto i = 0u; i < NUM_MOTORS; i++) {
 				// set the setpoint of the PID to the speed received from the STM32
-				vel_pids[i].setpoint = vel->speed[i];
+				vel_pids[i].setpoint = vel->speed[i] / 1000.0f;
 			}
 		}
+		count++;
 
 		// Capture the state of all the encoders
 		for (auto i = 0u; i < NUM_MOTORS; i++) {
