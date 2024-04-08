@@ -108,7 +108,7 @@ int main() {
 	uart_interrupt_init();
 
 	// Fill the arrays of motors, encoders, and pids, and initialise them
-	for(auto i = 0u; i < NUM_MOTORS; i++) {
+	for (auto i = 0u; i < NUM_MOTORS; i++) {
 		motors[i] = new Motor(motor_pins[i], NORMAL_DIR, SPEED_SCALE);
 		motors[i]->init();
 
@@ -130,7 +130,7 @@ int main() {
 	}
 
 	Encoder::Capture captures[NUM_MOTORS];
-
+	int missing_packet_count = 0;
 	while (true) {
 		if (packet_count > 0) {
 			packet_count -= 1;
@@ -138,6 +138,13 @@ int main() {
 			for (auto i = 0u; i < NUM_MOTORS; i++) {
 				// set the setpoint of the PID to the speed received from the STM32
 				vel_pids[i].setpoint = vel->speed[i] / 1000.0f;
+			}
+		} else {
+			missing_packet_count += 1;
+			if (missing_packet_count > 5) {
+				for (auto i = 0u; i < NUM_MOTORS; i++) {
+					vel_pids[i].setpoint = 0.0f;
+				}
 			}
 		}
 
