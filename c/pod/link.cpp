@@ -57,3 +57,19 @@ bool linkBufferPutChar(uint8_t c) {
     }
     return false;
 }
+
+uint8_t *linkPackData(uint8_t *data, uint8_t *length) {
+    static uint8_t buffer[PODTP_MAX_DATA_LEN + 5];
+    buffer[0] = PODTP_START_BYTE_1;
+    buffer[1] = PODTP_START_BYTE_2;
+    uint8_t check_sum[2] = { 0 };
+    for (uint8_t i = 0; i < *length; i++) {
+        check_sum[0] += data[i];
+        check_sum[1] += check_sum[0];
+        buffer[i + 2] = data[i];
+    }
+    buffer[*length + 2] = check_sum[0];
+    buffer[*length + 3] = check_sum[1];
+    *length += 4;
+    return buffer;
+}

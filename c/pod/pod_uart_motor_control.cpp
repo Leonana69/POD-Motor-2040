@@ -153,6 +153,18 @@ int main() {
 			captures[i] = encoders[i]->capture();
 		}
 
+		motor_encoder_t encoder_data = {
+			.count = {
+				captures[FR].count(),
+				captures[RR].count(),
+				captures[RL].count(),
+				captures[FL].count(),
+			}
+		};
+		uint8_t length = sizeof(encoder_data);
+		uint8_t *buffer = linkPackData((uint8_t *) &encoder_data, &length);
+		uart_write_blocking(UART_ID, buffer, length);
+
 		for (auto i = 0u; i < NUM_MOTORS; i++) {
 			// Calculate the acceleration to apply to the motor to move it closer to the velocity setpoint
 			float accel = vel_pids[i].calculate(captures[i].revolutions_per_second());
