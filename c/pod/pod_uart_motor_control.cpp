@@ -47,7 +47,7 @@ constexpr float DRIVING_SPEED = 0.2f;
 
 // PID values
 constexpr float VEL_KP = 30.0f;   // Velocity proportional (P) gain
-constexpr float VEL_KI = 1.0f;    // Velocity integral (I) gain
+constexpr float VEL_KI = 2.0f;    // Velocity integral (I) gain
 constexpr float VEL_KD = 0.5f;    // Velocity derivative (D) gain
 
 // Create an array of motor pointers
@@ -169,7 +169,11 @@ int main() {
 			// Calculate the acceleration to apply to the motor to move it closer to the velocity setpoint
 			float accel = vel_pids[i].calculate(captures[i].revolutions_per_second());
 			// Accelerate or decelerate the motor
-			motors[i]->speed(motors[i]->speed() + (accel * UPDATE_TIME));
+			if (vel_pids[i].setpoint == 0) {
+				motors[i]->speed(0.0f);
+			} else {
+				motors[i]->speed(motors[i]->speed() + (accel * UPDATE_TIME));
+			}
 		}
 
 		sleep_ms(1000 / UPDATES_RATE);
