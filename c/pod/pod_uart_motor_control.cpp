@@ -169,7 +169,7 @@ int main() {
 			// Calculate the acceleration to apply to the motor to move it closer to the velocity setpoint
 			float accel = vel_pids[i].calculate(captures[i].revolutions_per_second());
 			// Accelerate or decelerate the motor
-			if (vel_pids[i].setpoint == 0) {
+			if (vel_pids[i].setpoint == 0 && fabs(motors[i]->speed()) < 0.3f) {
 				motors[i]->speed(0.0f);
 			} else {
 				motors[i]->speed(motors[i]->speed() + (accel * UPDATE_TIME));
